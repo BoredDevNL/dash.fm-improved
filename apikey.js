@@ -1,1 +1,1 @@
-var apiKey = '';
+const ApiKey = "";

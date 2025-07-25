@@ -160,14 +160,163 @@ html {
 
 .mbcover {
     text-align: center;
-    /* Removed hover effect */
+}
+
+.vinyl-container {
+    perspective: 1000px;
+}
+
+.vinyl-record {
+    display: inline-block;
+    animation: spin 20s linear infinite;
+    transform-style: preserve-3d;
+}
+
+.vinyl-disc {
+    position: relative;
+    width: 500px;
+    height: 500px;
+    background: #161616;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.8);
+}
+
+.vinyl-grooves {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    border-radius: 50%;
+    background: repeating-radial-gradient(
+        circle at center,
+        rgba(0, 0, 0, 0) 0px,
+        rgba(0, 0, 0, 0) 100px,
+        transparent 100px,
+        rgba(255, 255, 255, 0.1) 102px,
+        transparent 103px,
+
+        rgba(255, 255, 255, 0.1) 108px,
+        transparent 109px,
+
+        rgba(255, 255, 255, 0.1) 116px,
+        transparent 117px,
+
+        rgba(255, 255, 255, 0.1) 124px,
+        transparent 125px,
+
+        rgba(255, 255, 255, 0.1) 132px,
+        transparent 133px,
+
+        rgba(255, 255, 255, 0.1) 140px,
+        transparent 141px,
+
+        rgba(255, 255, 255, 0.1) 148px,
+        transparent 149px,
+
+        rgba(255, 255, 255, 0.1) 156px,
+        transparent 157px,
+
+        rgba(255, 255, 255, 0.1) 164px,
+        transparent 165px,
+
+        rgba(255, 255, 255, 0.1) 172px,
+        transparent 173px,
+
+        rgba(255, 255, 255, 0.1) 180px,
+        transparent 181px,
+
+        rgba(255, 255, 255, 0.1) 188px,
+        transparent 189px,
+
+        rgba(255, 255, 255, 0.1) 196px,
+        transparent 197px,
+
+        rgba(255, 255, 255, 0.1) 204px,
+        transparent 205px,
+
+        rgba(255, 255, 255, 0.1) 212px,
+        transparent 213px,
+
+        rgba(255, 255, 255, 0.1) 220px,
+        transparent 221px,
+
+        rgba(255, 255, 255, 0.1) 228px,
+        transparent 229px,
+
+        rgba(255, 255, 255, 0.1) 236px,
+        transparent 237px,
+
+        rgba(255, 255, 255, 0.1) 244px,
+        transparent 245px
+    );
+}
+
+.album-art-container {
+    width: 200px;
+    height: 200px;
+    border-radius: 50%;
+    overflow: hidden;
+    border: 8px solid #262626;
+    position: relative;
+}
+
+.album-art-container::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 20px;
+    height: 20px;
+    background: #000;
+    border-radius: 50%;
+    border: 4px solid #161616;
+    z-index: 2;
 }
 
 #mb-album-art {
-    width: 90%;
-    max-width: 500px;
-    border-radius: 12px;
-    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border-radius: 50%;
+}
+
+@keyframes spin {
+    from {
+        transform: rotateZ(0deg);
+    }
+    to {
+        transform: rotateZ(360deg);
+    }
+}
+
+/* Add responsive styles for the vinyl */
+@media screen and (max-width: 768px) {
+    .vinyl-disc {
+        width: 300px;
+        height: 300px;
+    }
+    
+    .album-art-container {
+        width: 120px;
+        height: 120px;
+    }
+}
+
+@media screen and (max-height: 600px) {
+    .vinyl-disc {
+        width: 250px;
+        height: 250px;
+    }
+    
+    .album-art-container {
+        width: 100px;
+        height: 100px;
+    }
 }
 
 #track_info_div {
