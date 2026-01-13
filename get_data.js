@@ -490,7 +490,7 @@ function fullscreen() {
 
 // Glances configuration
 const glancesconfig = {
-    baseURL: 'http://192.168.3.211:61208'
+    baseURL: ''
 };
 
 // Function to fetch Glances data

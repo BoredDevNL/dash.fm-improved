@@ -1,11 +1,14 @@
-# ----Dash.fm-improved----
-This is a fork of [dash.fm](https://github.com/peterdconradie/dash.fm) It is a dashboard that displays album art and information about the artist and track currently playing on last.fm for a particular user. It fetches data from the last.fm, Wikipedia, Musicbrainz and Deezer APIs. It can run without a server or easily be deploed to a site using [w3schools](https://www.w3schools.com/spaces/) or [netlify](https://netlify.com).
+# dash.fm
+
+This is a fork of [dash.fm](https://github.com/peterdconradie/dash.fm) (Originally licensed under the MIT License) It is a dashboard that displays album art and information about the artist and track currently playing on last.fm for a particular user. It fetches data from the last.fm, Wikipedia, Musicbrainz and Deezer APIs. It can run without a server or easily be deploed to a site using [w3schools](https://www.w3schools.com/spaces/) or [netlify](https://netlify.com). </br>
+[![Release video](https://img.youtube.com/vi/U_x5WpvVOz4/0.jpg)](https://www.youtube.com/watch?v=U_x5WpvVOz4)
 
 # Roadmap:
 
 * ✅ Fork Succesfully
 * ✅ Drastically improve original UI
 * ✅ Stats widget
+* ✅ Setup page
 * ⏩️ Weather widget (home assistant or openweathermap)
 * ⏩️ Time widget
 * ⏩️ Easy to configure widgets
@@ -13,6 +16,7 @@ This is a fork of [dash.fm](https://github.com/peterdconradie/dash.fm) It is a d
 
 
 ## Setup
+**Optional** go to [these instructions](#manual-setup) for the manual setup, that doesn't require starting a php server.
 
 For this to work you need to have some kind of way to start a PHP server. Here are the instructions for different operating systems:
 
@@ -104,12 +108,34 @@ pkgin install php
 # Start PHP server
 php -S localhost:8000
 ```
+**After you have gone through the setup you are able to stop the PHP server and just open the HTML file, as the php server is only to set in certain variables (API, username, glances IP) which you can put in manually in the manual setup below, not requiring starting a php server.**
 
-### Notes:
+
+## Manual setup.
+
+For this manual setup no php server is required.
+
+1. API KEY:
+   put your last.fm api key in `apikey.js`
+
+2. last.fm user:
+   in `get_data.js` you have to put your user in:
+   (line5)`const url_recent = ```https://ws.audioscrobbler.com/2.0/?method=user.getrecenttracks&user=xxx&api_key=${ApiKey}&format=json&limit=1`;```
+and then inside of the user=xxx (replace xxx with your last.fm username)
+3. glances (stats)
+   under baseURL (roughly line 493) in `get_data.js` you will have to put the ip address of the host running glances. Read the [Glances Documentation](https://glances.readthedocs.io/en/develop/) for instructions to install glances and to get     it running.
+   
+
+
+### Notes
 - After starting the PHP server, make sure to keep the terminal window open
 - Access your dash.fm installation at `http://localhost:8000`
 - If you're using a different port, replace 8000 with your preferred port number
 - For production environments, consider using a proper web server like Apache or Nginx
+- If you mess up during your setup (wrong IP/API) open up the folder and clear the api key in apikey.js ```const ApiKey = "API_KEY_HERE";``` then reload the website, otherwise manually change it in apikey.js and get_data.js ```const glancesconfig = {
+    baseURL: 'http://IP_ADDRESS_HERE:61208'
+};``` Keep in mind that you should keep the port :61208 unless you have manually changed that in Glances.
+
 
 ### Troubleshooting:
 - If you get a "port already in use" error, try a different port number
@@ -117,7 +143,8 @@ php -S localhost:8000
 - For permission errors, try running the commands with sudo (Linux/BSD) or as administrator (Windows)
 - Check that PHP is installed by running `php -v`
 
-A setup should automatically open up on first startup, where you will fill in all your information (api key, IP address, user etc.) and then you will be good to go!
+A setup window should automatically open up on first startup, where you will fill in all your information (api key, IP address, user etc.) and then you will be good to go!
+Here is said setup window:
 
 
 ## Known Issues
