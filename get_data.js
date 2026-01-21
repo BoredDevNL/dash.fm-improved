@@ -2,19 +2,17 @@ let lastPlayedTrack = null;
 const myUrl1 = new URL(window.location.toLocaleString());
 const myUrl2 = new URL(myUrl1);
 const user = myUrl2.searchParams.get('u');
-const url_recent = `https://ws.audioscrobbler.com/2.0/?method=user.getrecenttracks&user=christiaansp&api_key=${ApiKey}&format=json&limit=1`;
+const url_recent = `https://ws.audioscrobbler.com/2.0/?method=user.getrecenttracks&user=&api_key=${ApiKey}&format=json&limit=1`;
 
 // Clock update function
 function updateClock() {
     const now = new Date();
     const hours = String(now.getHours()).padStart(2, '0');
     const minutes = String(now.getMinutes()).padStart(2, '0');
-    const seconds = String(now.getSeconds()).padStart(2, '0');
     
     // Update flip clock panels
     updateFlipPanel(document.querySelector('.flip-panel.hours'), hours);
     updateFlipPanel(document.querySelector('.flip-panel.minutes'), minutes);
-    updateFlipPanel(document.querySelector('.flip-panel.seconds'), seconds);
 }
 
 function updateFlipPanel(panel, value) {
