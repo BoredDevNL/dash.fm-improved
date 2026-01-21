@@ -5,7 +5,6 @@
 <head>
     <link rel="icon" type="image/png" href="images/favicon.png">
     <link rel="stylesheet" type="text/css" href="style.css" />
-    <link href="https://fonts.googleapis.com/css2?family=Fira+Sans:wght@100;200;300;400;700&display=swap" rel="stylesheet">
     <script src="apikey.js"></script>
     <script src="get_data.js"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
@@ -14,17 +13,8 @@
     <script>
         // Check if setup is needed
         window.onload = function() {
-            // First check if the ApiKey variable is defined and not empty
+            // Check if the ApiKey variable is defined and not empty
             if (typeof ApiKey === 'undefined' || !ApiKey || ApiKey.trim() === '') {
-                window.location.href = 'setup.html';
-                return;
-            }
-
-            // Then check if glancesconfig is defined and has a valid baseURL
-            if (typeof glancesconfig === 'undefined' || 
-                !glancesconfig.baseURL || 
-                glancesconfig.baseURL === 'http://localhost:61208' || 
-                glancesconfig.baseURL.trim() === '') {
                 window.location.href = 'setup.html';
                 return;
             }
@@ -37,24 +27,6 @@
     <!-- Blurred background that will be dynamically set from album art -->
     <div id="album-background"></div>
     <div id="dark-overlay"></div>
-
-    <div id="system-stats-widget">
-        <div class="system-stats-container">
-            <div class="stats-header">
-                <span id="system-name">Stats</span>
-                <span id="system-status">Online</span>
-            </div>
-            <div class="stats-details">
-                <div class="stats-icon">
-                    <i class="material-icons">computer</i>
-                </div>
-                <div class="stats-info">
-                    <span id="cpu-usage">CPU: ---%</span>
-                    <span id="ram-usage">RAM: ---GB / ---GB</span>
-                </div>
-            </div>
-        </div>
-    </div>
     
     <div class="top-right">
         <a id="fullscreen-button" href="#" onclick="fullscreen();">
@@ -139,7 +111,7 @@
     <div id="centering">
         <div id="all_content">
             <div id="container">
-                <div id="cover-info">
+                <div id="cover-info" style="display: block;">
                     <img src="images/top.png" id="buffer">
                     <div class="mbcover">
                         <img src="images/album.png" id="mb-album-art" alt="Album Art">
@@ -147,9 +119,37 @@
                 </div>
                 <div id="track_info_div">
                     <img src="images/top.png" id="buffer">
-                    <h1 id="track-info">Loading...</h1>
-                    <h2 id="artist-info">Loading...</h2>
-                    <h3 id="album-info">Loading...</h3>
+                    <div id="music-display">
+                        <h1 id="track-info">Loading...</h1>
+                        <h2 id="artist-info">Loading...</h2>
+                        <h3 id="album-info">Loading...</h3>
+                    </div>
+                    <div id="clock-display" style="display: none;">
+                        <div class="flip-clock-wrapper">
+                            <div class="flip-clock">
+                                <div class="flip-panel hours">
+                                    <div class="flip-panel-inner">
+                                        <span class="flip-top">00</span>
+                                        <span class="flip-bottom">00</span>
+                                    </div>
+                                </div>
+                                <div class="flip-divider">:</div>
+                                <div class="flip-panel minutes">
+                                    <div class="flip-panel-inner">
+                                        <span class="flip-top">00</span>
+                                        <span class="flip-bottom">00</span>
+                                    </div>
+                                </div>
+                                <div class="flip-divider">:</div>
+                                <div class="flip-panel seconds">
+                                    <div class="flip-panel-inner">
+                                        <span class="flip-top">00</span>
+                                        <span class="flip-bottom">00</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>

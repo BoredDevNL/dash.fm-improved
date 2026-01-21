@@ -2,12 +2,94 @@ let lastPlayedTrack = null;
 const myUrl1 = new URL(window.location.toLocaleString());
 const myUrl2 = new URL(myUrl1);
 const user = myUrl2.searchParams.get('u');
-const url_recent = `https://ws.audioscrobbler.com/2.0/?method=user.getrecenttracks&user=xxx&api_key=${ApiKey}&format=json&limit=1`;
+const url_recent = `https://ws.audioscrobbler.com/2.0/?method=user.getrecenttracks&user=christiaansp&api_key=${ApiKey}&format=json&limit=1`;
+
+// Clock update function
+function updateClock() {
+    const now = new Date();
+    const hours = String(now.getHours()).padStart(2, '0');
+    const minutes = String(now.getMinutes()).padStart(2, '0');
+    const seconds = String(now.getSeconds()).padStart(2, '0');
+    
+    // Update flip clock panels
+    updateFlipPanel(document.querySelector('.flip-panel.hours'), hours);
+    updateFlipPanel(document.querySelector('.flip-panel.minutes'), minutes);
+    updateFlipPanel(document.querySelector('.flip-panel.seconds'), seconds);
+}
+
+function updateFlipPanel(panel, value) {
+    if (!panel) return;
+    
+    const inner = panel.querySelector('.flip-panel-inner');
+    const top = panel.querySelector('.flip-top');
+    const bottom = panel.querySelector('.flip-bottom');
+    
+    if (!top || !bottom) return;
+    
+    const currentValue = top.textContent;
+    
+    // Only animate if value changed
+    if (currentValue !== value) {
+        // Set the bottom number to the new value
+        bottom.textContent = value;
+        
+        // Animate the flip
+        inner.style.transition = 'transform 0.6s ease-in-out';
+        inner.style.transform = 'rotateX(180deg)';
+        
+        // After flip completes, update top and reset
+        setTimeout(() => {
+            top.textContent = value;
+            inner.style.transition = 'none';
+            inner.style.transform = 'rotateX(0deg)';
+        }, 600);
+    }
+}
+
+// Start clock updates only after DOM is ready
+if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', function() {
+        updateClock();
+        setInterval(updateClock, 1000);
+    });
+} else {
+    updateClock();
+    setInterval(updateClock, 1000);
+}
+
+// Check if music is currently playing
+function isCurrentlyPlaying(track) {
+    // Debug log to see what we're getting
+    console.log('Track data:', track);
+    console.log('Track @attr:', track['@attr']);
+    return track['@attr'] && track['@attr'].nowplaying === 'true';
+}
 
 function updateNowPlaying() {
     // the first, original fetch for raw last.fm data
     fetch(url_recent).then(response => response.json()).then(data => {
         const track = data.recenttracks.track[0];
+        
+        // Check if music is currently playing
+        const playing = isCurrentlyPlaying(track);
+        
+        // Toggle display based on playing status
+        const coverInfo = document.getElementById('cover-info');
+        const musicDisplay = document.getElementById('music-display');
+        const clockDisplay = document.getElementById('clock-display');
+        
+        if (coverInfo && musicDisplay && clockDisplay) {
+            if (!playing) {
+                coverInfo.style.display = 'none';
+                musicDisplay.style.display = 'none';
+                clockDisplay.style.display = 'flex';
+            } else {
+                coverInfo.style.display = 'block';
+                musicDisplay.style.display = 'block';
+                clockDisplay.style.display = 'none';
+            }
+        }
+        
         let artist = track.artist['#text'];
         const song = track.name;
         let album = track.album['#text'];
@@ -487,75 +569,6 @@ function fullscreen() {
         openFullscreen();
     }
 }
-
-// Glances configuration
-const glancesconfig = {
-    baseURL: ''
-};
-
-// Function to fetch Glances data
-async function fetchGlancesData(endpoint) {
-    try {
-        const response = await fetch(`${glancesconfig.baseURL}${endpoint}`);
-        if (!response.ok) {
-            throw new Error(`Error fetching ${endpoint}: ${response.statusText}`);
-        }
-        const data = await response.json();
-        return data;
-    } catch (error) {
-        console.error(`Error fetching ${endpoint}:`, error);
-        return null;
-    }
-}
-
-// Function to update system stats from Glances
-async function updateSystemStats() {
-    try {
-        // Fetch CPU and memory data only
-        const [cpuData, memData] = await Promise.all([
-            fetchGlancesData('/api/4/cpu'),
-            fetchGlancesData('/api/4/mem')
-        ]);
-
-        // Update CPU usage
-        if (cpuData) {
-            const cpuUsage = cpuData.total;
-            document.getElementById('cpu-usage').textContent = `CPU: ${cpuUsage.toFixed(1)}%`;
-            
-            // Change icon color based on CPU usage
-            const statsIcon = document.querySelector('.stats-icon i.material-icons');
-            if (parseFloat(cpuUsage) > 80) {
-                statsIcon.style.color = '#F44336'; // Red for high usage
-            } else if (parseFloat(cpuUsage) > 50) {
-                statsIcon.style.color = '#FFC107'; // Yellow for medium usage
-            } else {
-                statsIcon.style.color = '#64B5F6'; // Blue for normal usage
-            }
-        }
-
-        // Update RAM usage
-        if (memData) {
-            const ramTotal = (memData.total / 1024 / 1024 / 1024).toFixed(1); // Convert to GB
-            const ramUsed = (memData.used / 1024 / 1024 / 1024).toFixed(1); // Convert to GB
-            document.getElementById('ram-usage').textContent = `RAM: ${ramUsed}GB / ${ramTotal}GB`;
-        }
-
-        // Update system status
-        document.getElementById('system-status').textContent = 'Online';
-        document.getElementById('system-status').style.color = '#4CAF50';
-    } catch (error) {
-        console.error('Error updating system stats:', error);
-        document.getElementById('system-status').textContent = 'Offline';
-        document.getElementById('system-status').style.color = '#F44336';
-    }
-}
-
-// Initialize system stats widget
-updateSystemStats();
-
-// Refresh system stats every 10 seconds
-setInterval(updateSystemStats, 10000);
-
 
 // Update the now playing information every 3 seconds
 setInterval(updateNowPlaying, 2000);

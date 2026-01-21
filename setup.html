@@ -165,46 +165,16 @@
 
         <div class="setup-steps" id="step1">
             <div class="step">
-                <h2>Step 1: Install Glances</h2>
-                <p>First, we need to install Glances to monitor your system statistics. Open your terminal and run the following command:</p>
-                <div class="code-block">pip install glances[all]</div>
-                <button onclick="nextStep(2)">I've installed Glances</button>
-            </div>
-        </div>
-
-        <div class="setup-steps" id="step2">
-            <div class="step">
-                <h2>Step 2: Start Glances Web Server</h2>
-                <p>Now, start the Glances web server by running one of these commands:</p>
-                <div class="code-block">glances -w</div>
-                <p>or</p>
-                <div class="code-block">python3 -m glances -w</div>
-                <p>Keep this running in the background. The web server will start on port 61208.</p>
-                <button onclick="nextStep(3)">I've started the server</button>
-            </div>
-        </div>
-
-        <div class="setup-steps" id="step3">
-            <div class="step">
-                <h2>Step 3: Configure Host Machine</h2>
-                <p>Enter the IP address of your host machine (the one running Glances):</p>
-                <input type="text" id="hostIP" placeholder="e.g., 192.168.1.100">
-                <button onclick="saveHostIP()">Save Host IP</button>
-            </div>
-        </div>
-
-        <div class="setup-steps" id="step4">
-            <div class="step">
-                <h2>Step 4: Set Last.fm Username</h2>
+                <h2>Step 1: Set Last.fm Username</h2>
                 <p>Enter your Last.fm username:</p>
                 <input type="text" id="lastfmUser" placeholder="Your Last.fm username">
                 <button onclick="saveLastfmUser()">Save Username</button>
             </div>
         </div>
 
-        <div class="setup-steps" id="step5">
+        <div class="setup-steps" id="step2">
             <div class="step">
-                <h2>Step 5: Set API Key</h2>
+                <h2>Step 2: Set API Key</h2>
                 <p>Enter your Last.fm API key:</p>
                 <input type="text" id="apiKey" placeholder="Your Last.fm API key">
                 <button onclick="saveAPIKey()">Complete Setup</button>
@@ -225,47 +195,13 @@
                 el.classList.remove('active');
             });
             document.getElementById('step' + step).classList.add('active');
-            // Calculate progress as a percentage of total steps (5 steps total)
-            document.getElementById('progress').style.width = ((step - 1) * 25) + '%';
+            // Calculate progress as a percentage of total steps (2 steps total)
+            document.getElementById('progress').style.width = ((step - 1) * 50) + '%';
             currentStep = step;
         }
 
         function nextStep(step) {
             showStep(step);
-        }
-
-        function saveHostIP() {
-            const hostIP = document.getElementById('hostIP').value;
-            if (!hostIP) {
-                alert('Please enter a valid IP address');
-                return;
-            }
-
-            // Send to PHP script with instruction to only update glancesconfig
-            fetch('save_config.php', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({
-                    type: 'glances',
-                    content: hostIP,
-                    pattern: /const glancesconfig = \{[\s\S]*?\};/,
-                    replacement: `const glancesconfig = {\n    baseURL: 'http://${hostIP}:61208'\n};`
-                })
-            })
-            .then(response => response.json())
-            .then(data => {
-                if (data.success) {
-                    nextStep(4);
-                } else {
-                    throw new Error(data.error || 'Failed to save IP');
-                }
-            })
-            .catch(error => {
-                console.error('Error updating get_data.js:', error);
-                alert('Error saving host IP. Please try again. Make sure you have PHP installed and running.');
-            });
         }
 
         function saveLastfmUser() {
@@ -289,7 +225,7 @@
             .then(response => response.json())
             .then(data => {
                 if (data.success) {
-                    nextStep(5);
+                    nextStep(2);
                 } else {
                     throw new Error(data.error || 'Failed to save username');
                 }
